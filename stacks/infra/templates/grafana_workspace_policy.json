@@ -1,0 +1,72 @@
+{
+    "Statement": [
+        {
+            "Action": [
+                "cloudwatch:ListMetrics",
+                "cloudwatch:GetMetricStatistics",
+                "cloudwatch:GetMetricData",
+                "cloudwatch:DescribeAlarmsForMetric",
+                "cloudwatch:DescribeAlarms",
+                "cloudwatch:DescribeAlarmHistory"
+            ],
+            "Effect": "Allow",
+            "Resource": "*",
+            "Sid": "AllowReadingMetricsFromCloudWatch"
+        },
+        {
+            "Action": [
+                "logs:StopQuery",
+                "logs:StartQuery",
+                "logs:GetQueryResults",
+                "logs:GetLogGroupFields",
+                "logs:GetLogEvents",
+                "logs:DescribeLogGroups"
+            ],
+            "Effect": "Allow",
+            "Resource": "*",
+            "Sid": "AllowReadingLogsFromCloudWatch"
+        },
+        {
+            "Action": [
+                "ec2:DescribeTags",
+                "ec2:DescribeRegions",
+                "ec2:DescribeInstances"
+            ],
+            "Effect": "Allow",
+            "Resource": "*",
+            "Sid": "AllowReadingTagsInstancesRegionsFromEC2"
+        },
+        {
+            "Action": "tag:GetResources",
+            "Effect": "Allow",
+            "Resource": "*",
+            "Sid": "AllowReadingResourcesForTags"
+        },
+        {
+            "Action": [
+                "aps:QueryMetrics",
+                "aps:ListWorkspaces",
+                "aps:GetSeries",
+                "aps:GetMetricMetadata",
+                "aps:GetLabels",
+                "aps:DescribeWorkspace"
+            ],
+            "Effect": "Allow",
+            "Resource": "*",
+            "Sid": ""
+        },
+        {
+            "Action": [
+                "kms:Decrypt",
+                "kms:Encrypt",
+                "kms:GenerateDataKey*",
+                "kms:CreateGrant",
+                "kms:ReEncrypt*",
+                "kms:DescribeKey"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        }
+    ],
+    "Version": "2012-10-17"
+}
