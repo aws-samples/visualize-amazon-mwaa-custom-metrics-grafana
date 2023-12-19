@@ -1,7 +1,7 @@
 resource "aws_grafana_workspace" "grafana" {
   name                     = local.grafana_workspace_name
   account_access_type      = "CURRENT_ACCOUNT"
-  authentication_providers = ["SAML"]
+  authentication_providers = ["AWS_SSO"]
   permission_type          = "CUSTOMER_MANAGED"
   data_sources             = ["CLOUDWATCH"]
   description              = "Grafana workspace"
@@ -55,7 +55,7 @@ resource "grafana_dashboard" "events_grafana_dashboard" {
   })
 }
 
-resource "aws_grafana_workspace_api_key" "grafana_admin_apikey" {
+resource "aws_grafana_workspace_api_key" "grafana_admin_api_key" {
   key_name        = "admin-apikey"
   key_role        = "ADMIN"
   seconds_to_live = 2592000 # 30 days

@@ -7,7 +7,7 @@ resource "aws_iam_policy" "events_lambda_policy" {
   name = local.events_lambda_policy_name
   policy = templatefile("${path.module}/templates/events_lambda_policy.json", {
     bucket_name          = aws_s3_bucket.mwaa_metrics.id
-    kms_arn              = aws_kms_key.lambda_kms_key.arn
+#    kms_arn              = aws_kms_key.lambda_kms_key.arn
     timestream_table_arn = aws_timestreamwrite_table.events_store.arn
   })
 }
@@ -46,7 +46,9 @@ resource "aws_iam_policy" "mwaa_iam_policy" {
   name = local.mwaa_iam_policy_name
   policy = templatefile("${path.module}/templates/mwaa_policy.json", {
     bucket_name = aws_s3_bucket.mwaa_events.id
-    kms_arn     = aws_kms_key.mwaa_events_kms_key.arn
+    metrics_bucket_name = aws_s3_bucket.mwaa_metrics.id
+    account_id = data.aws_caller_identity.caller_identity.account_id
+#    kms_arn     = aws_kms_key.mwaa_events_kms_key.arn
   })
 }
 

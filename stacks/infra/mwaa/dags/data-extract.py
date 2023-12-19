@@ -10,7 +10,8 @@ from io import StringIO
 DAG_ID = os.path.basename(__file__).replace(".py", "")
 
 MAX_AGE_IN_DAYS = 1
-S3_BUCKET = 'mwaa-extract-metadata-360393323480'
+# S3_BUCKET = 'mwaa-extract-metadata-360393323480'
+S3_BUCKET = 'mwaa-logs-bucket-869498765676-dev'
 S3_KEY = 'files/export/{0}.csv'
 
 # You can add other objects to export from the metadatabase,

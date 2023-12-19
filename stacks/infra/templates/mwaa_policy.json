@@ -4,7 +4,7 @@
       {
         "Effect": "Allow",
         "Action": "airflow:PublishMetrics",
-        "Resource": "arn:aws:airflow:us-east-1:975621287051:environment/*"
+        "Resource": "arn:aws:airflow:us-east-1:${account_id}:environment/*"
     },
     {
         "Effect": "Deny",
@@ -24,6 +24,16 @@
         "Resource": [
           "arn:aws:s3:::${bucket_name}",
           "arn:aws:s3:::${bucket_name}/*"
+        ]
+    },
+    {
+        "Effect": "Allow",
+        "Action": [
+            "s3:PutObject*"
+        ],
+        "Resource": [
+          "arn:aws:s3:::${metrics_bucket_name}",
+          "arn:aws:s3:::${metrics_bucket_name}/*"
         ]
     },
     {
@@ -64,16 +74,6 @@
             "sqs:SendMessage"
         ],
         "Resource": "arn:aws:sqs:us-east-1:*:airflow-celery-*"
-    },
-    {
-        "Effect": "Allow",
-        "Action": [
-            "kms:Decrypt",
-            "kms:DescribeKey",
-            "kms:GenerateDataKey*",
-            "kms:Encrypt"
-        ],
-        "Resource": "${kms_arn}"
     }
     ]
   }

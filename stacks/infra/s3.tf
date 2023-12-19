@@ -116,9 +116,9 @@ resource "aws_s3_bucket_public_access_block" "mwaa_events_access_logs_bucket_acc
 }
 
 resource "aws_s3_object" "mwaa_reqs" {
-  for_each = fileset("mwaa/", "*")
+  for_each = fileset("./mwaa/", "**")
   bucket   = aws_s3_bucket.mwaa_events.id
   key      = each.value
-  source   = "mwaa/${each.value}"
-  etag     = filemd5("mwaa/${each.value}")
+  source   = "./mwaa/${each.value}"
+  etag     = filemd5("./mwaa/${each.value}")
 }

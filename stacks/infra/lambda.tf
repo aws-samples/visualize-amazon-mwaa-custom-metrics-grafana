@@ -13,7 +13,7 @@ resource "aws_lambda_function" "events_lambda" {
   filename                       = data.archive_file.events_lambda_code_zip.output_path
   source_code_hash               = data.archive_file.events_lambda_code_zip.output_base64sha256
   handler                        = "index.handler"
-  kms_key_arn                    = aws_kms_key.lambda_kms_key.arn
+#  kms_key_arn                    = aws_kms_key.lambda_kms_key.arn
   runtime                        = "python3.10"
   reserved_concurrent_executions = local.reserved_concurrent_executions
   function_name                  = local.events_lambda_function_name
@@ -30,6 +30,7 @@ resource "aws_lambda_function" "events_lambda" {
       REGION   = data.aws_region.region.name
     }
   }
+  layers = ["arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python310:7"]
 
   # vpc_config {
   #   subnet_ids         = [aws_subnet.private_subnet1.id, aws_subnet.private_subnet2.id]
@@ -71,9 +72,9 @@ resource "aws_lambda_permission" "s3_metrics_trigger" {
 #   }
 # }
 
-resource "aws_lambda_layer_version" "pandas_lambda_layer" {
-  filename   = "${path.module}/src/pandas.zip"
-  layer_name = "pandas"
-
-  compatible_runtimes = ["python3.10"]
-}
+#resource "aws_lambda_layer_version" "pandas_lambda_layer" {
+#  filename   = "${path.module}/src/pandas.zip"
+#  layer_name = "pandas"
+#
+#  compatible_runtimes = ["python3.10"]
+#}
