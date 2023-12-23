@@ -42,9 +42,9 @@ resource "aws_s3_bucket_notification" "logs_bucket_notification" {
 
   lambda_function {
     lambda_function_arn = aws_lambda_function.events_lambda.arn
-    events              = ["s3:ObjectCreated:*"]
-    filter_prefix       = "AWSLogs/"
-    filter_suffix       = ".log"
+    events              = ["s3:ObjectCreated:Put"]
+#    filter_prefix       = "AWSLogs/"
+#    filter_suffix       = ".log"
   }
 
   depends_on = [aws_lambda_permission.s3_metrics_trigger]

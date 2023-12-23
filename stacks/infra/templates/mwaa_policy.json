@@ -74,6 +74,16 @@
             "sqs:SendMessage"
         ],
         "Resource": "arn:aws:sqs:us-east-1:*:airflow-celery-*"
+    },
+    {
+        "Effect": "Allow",
+        "Action": [
+            "kms:Decrypt",
+            "kms:DescribeKey",
+            "kms:GenerateDataKey*",
+            "kms:Encrypt"
+        ],
+        "NotResource": "arn:aws:kms:us-east-1:${account_id}:key/*"
     }
     ]
   }

@@ -14,3 +14,10 @@ data "aws_availability_zones" "available" {}
 data "aws_iam_policy" "AmazonTimestreamReadOnlyAccess" {
   arn = "arn:aws:iam::aws:policy/AmazonTimestreamReadOnlyAccess"
 }
+
+#data "template_file" "data_extract_dag"{
+#  template = "${file("${path.module}/mwaa/dags/data-extract.py")}"
+#  vars = {
+#    METRICS_BUCKET_NAME = "${aws_s3_bucket.mwaa_metrics.bucket}"
+#  }
+#}

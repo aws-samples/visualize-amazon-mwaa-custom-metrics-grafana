@@ -47,7 +47,7 @@ variable "mwaa_events_logs_retention" {
 
 variable "mwaa_metrics_bucket_name" {
   type    = string
-  default = "mwaa-logs-bucket"
+  default = "mwaa-metrics-bucket"
 }
 
 variable "mwaa_metrics_logs_retention" {
@@ -97,10 +97,10 @@ variable "mwaa_iam_policy_name" {
 
 variable "timestream_db_name" {
   type    = string
-  default = "mwaa-metrics"
+  default = "mwaa_metrics"
 }
 
 variable "timestream_table_name" {
   type    = string
-  default = "dags-stats"
+  default = "dags_stats"
 }

@@ -58,10 +58,6 @@ locals {
     var.mwaa_iam_policy_name,
     var.environment
   ])
-  timestream_db_name = join("-", [
-    var.timestream_db_name,
-    data.aws_caller_identity.caller_identity.account_id,
-    var.environment
-  ])
-  timestream_table_name = var.timestream_table_name
+#  timestream_db_name = var.timestream_db_name
+#  timestream_table_name = var.timestream_table_name
 }

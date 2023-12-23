@@ -1,7 +1,7 @@
 data "archive_file" "events_lambda_code_zip" {
   type        = "zip"
-  source_file = "${path.module}/src/metrics-parser.py"
-  output_path = "metrics-parser-lambda.zip"
+  source_file = "${path.module}/src/metrics_parser.py"
+  output_path = "metrics_parser-lambda.zip"
 }
 
 ## Lambda Functions
@@ -12,7 +12,7 @@ resource "aws_lambda_function" "events_lambda" {
   #checkov:skip=CKV_AWS_272:Custom code, code-signing not implemented
   filename                       = data.archive_file.events_lambda_code_zip.output_path
   source_code_hash               = data.archive_file.events_lambda_code_zip.output_base64sha256
-  handler                        = "index.handler"
+  handler                        = "metrics_parser.lambda_handler"
 #  kms_key_arn                    = aws_kms_key.lambda_kms_key.arn
   runtime                        = "python3.10"
   reserved_concurrent_executions = local.reserved_concurrent_executions
@@ -25,9 +25,10 @@ resource "aws_lambda_function" "events_lambda" {
   }
   environment {
     variables = {
-      TBL_NAME = aws_timestreamwrite_table.events_store.table_name
-      DB_NAME  = aws_timestreamwrite_database.events_store.database_name
-      REGION   = data.aws_region.region.name
+      TABLE_NAME = var.timestream_table_name
+      DB_NAME  = var.timestream_db_name
+      REGION_NAME   = data.aws_region.region.name
+      METRICS_BUCKET_NAME = aws_s3_bucket.mwaa_events.bucket
     }
   }
   layers = ["arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python310:7"]
@@ -71,10 +72,10 @@ resource "aws_lambda_permission" "s3_metrics_trigger" {
 #     Name = "events-lambda-sg"
 #   }
 # }
-
+#
 #resource "aws_lambda_layer_version" "pandas_lambda_layer" {
 #  filename   = "${path.module}/src/pandas.zip"
 #  layer_name = "pandas"
-#
 #  compatible_runtimes = ["python3.10"]
+#  source_code_hash = data.archive_file.events_lambda_code_zip.output_base64sha256
 #}

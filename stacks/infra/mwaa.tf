@@ -41,6 +41,7 @@ resource "aws_security_group" "mwaa_security_group" {
      "core.default_task_retries" = 10
      "core.parallelism"          = 1
      "core.lazy_load_plugins"    = false
+     "custom.bucket_name" = "${aws_s3_bucket.mwaa_metrics.bucket}"
    }
 
    logging_configuration {
@@ -69,7 +70,9 @@ resource "aws_security_group" "mwaa_security_group" {
        log_level = "WARNING"
      }
    }
-
-
    depends_on = [aws_s3_object.mwaa_reqs]
  }
+
+resource "null_resource" "metrics-extract-dag" {
+
+}

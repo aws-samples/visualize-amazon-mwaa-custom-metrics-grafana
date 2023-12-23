@@ -2,18 +2,25 @@ resource "aws_grafana_workspace" "grafana" {
   name                     = local.grafana_workspace_name
   account_access_type      = "CURRENT_ACCOUNT"
   authentication_providers = ["AWS_SSO"]
-  permission_type          = "CUSTOMER_MANAGED"
-  data_sources             = ["CLOUDWATCH"]
+  permission_type          = "SERVICE_MANAGED"
+  data_sources             = ["CLOUDWATCH","TIMESTREAM"]
   description              = "Grafana workspace"
   role_arn                 = aws_iam_role.grafana_workspace_role.arn
   grafana_version          = local.grafana_version
+  configuration = jsonencode({
+    unifiedAlerting = {
+      enabled = true
+    }
+  })
   vpc_configuration {
     security_group_ids = [aws_security_group.grafana_security_group.id]
     subnet_ids         = [aws_subnet.private_subnet1.id, aws_subnet.private_subnet2.id]
   }
-  timeouts {
-    create = "30m"
-  }
+  notification_destinations = ["SNS"]
+#  plugin_admin_enabled = true
+#  timeouts {
+#    create = "30m"
+#  }
 }
 
 resource "aws_security_group" "grafana_security_group" {
@@ -30,25 +37,32 @@ resource "aws_security_group" "grafana_security_group" {
   }
 }
 
-resource "grafana_data_source" "events_timestream_datasource" {
+resource "null_resource" "plugin_mgmt" {
   depends_on = [aws_grafana_workspace.grafana]
+  provisioner "local-exec" {
+    command = "aws grafana update-workspace-configuration --region ${data.aws_region.region.name} --workspace-id ${aws_grafana_workspace.grafana.id} --configuration '{\"plugins\": {\"pluginAdminEnabled\": true}}'"
+  }
+}
 
-  type = "events-timestream-datasource"
+resource "grafana_data_source" "events_timestream_datasource" {
+  depends_on = [aws_grafana_workspace.grafana, null_resource.plugin_mgmt]
+
+  type = "grafana-timestream-datasource"
   name = "mwaa_events_timestream"
   json_data_encoded = jsonencode({
     defaultRegion = data.aws_region.region.name
     authType      = "default"
-    assumeRoleArn = aws_iam_role.grafana_workspace_role.arn
+#    assumeRoleArn = aws_iam_role.grafana_workspace_role.arn
   })
 }
 
 resource "grafana_folder" "events_grafana_folder" {
-  depends_on = [aws_grafana_workspace.grafana]
+  depends_on = [aws_grafana_workspace.grafana, null_resource.plugin_mgmt]
   title      = "MWAA events dashboards"
 }
 
 resource "grafana_dashboard" "events_grafana_dashboard" {
-  depends_on = [aws_grafana_workspace.grafana]
+  depends_on = [aws_grafana_workspace.grafana, null_resource.plugin_mgmt]
   folder     = grafana_folder.events_grafana_folder.id
   config_json = templatefile("${path.module}/grafana/dashboard.json", {
     timestream_datasource = grafana_data_source.events_timestream_datasource.uid
@@ -56,6 +70,7 @@ resource "grafana_dashboard" "events_grafana_dashboard" {
 }
 
 resource "aws_grafana_workspace_api_key" "grafana_admin_api_key" {
+  depends_on = [aws_grafana_workspace.grafana, null_resource.plugin_mgmt]
   key_name        = "admin-apikey"
   key_role        = "ADMIN"
   seconds_to_live = 2592000 # 30 days

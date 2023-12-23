@@ -25,7 +25,7 @@ def load_dag_csv(event):
 
 def get_dags_hourly_stats(event, context):
     DB_NAME = os.environ["DB_NAME"]
-    TBL_NAME = os.environ["TABLE_NAME"]
+    TABLE_NAME = os.environ["TABLE_NAME"]
     REGION = os.environ["REGION_NAME"]
     try:
         # creating boto3 client for timestream db
@@ -101,7 +101,7 @@ def get_dags_hourly_stats(event, context):
                   'MeasureValueType': "VARCHAR", 'Dimensions': dimension}
         print(f"record : {record}")
         client = boto3.client("timestream-write", region_name=REGION)
-        response = client.write_records(DatabaseName=DB_NAME, TableName=TBL_NAME, Records=[record])
+        response = client.write_records(DatabaseName=DB_NAME, TableName=TABLE_NAME, Records=[record])
         print(response)
     except client.exceptions.RejectedRecordsException as err:
         print("RejectedRecords: ", err)

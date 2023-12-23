@@ -5,13 +5,13 @@ import boto3
 from airflow.utils.dates import days_ago
 from airflow.models import DagRun, TaskFail, TaskInstance
 import csv, re
+from airflow.operators.python_operator import PythonOperator
 from io import StringIO
 
 DAG_ID = os.path.basename(__file__).replace(".py", "")
 
 MAX_AGE_IN_DAYS = 1
-# S3_BUCKET = 'mwaa-extract-metadata-360393323480'
-S3_BUCKET = 'mwaa-logs-bucket-869498765676-dev'
+# S3_BUCKET = "${METRICS_BUCKET_NAME}"
 S3_KEY = 'files/export/{0}.csv'
 
 # You can add other objects to export from the metadatabase,
@@ -21,9 +21,21 @@ OBJECTS_TO_EXPORT = [
     # [TaskInstance, TaskInstance.execution_date],
 ]
 
+# @task
+# def get_bucket_name(**kwargs):
+#   S3_BUCKET_NAME = kwargs['conf'].get(section='custom', key='bucket_name')
+#   print("S3_BUCKET_NAME : ", S3_BUCKET_NAME)
+#   return S3_BUCKET_NAME
 
 @task()
 def export_db_task(**kwargs):
+    # s3_bucuket_name = PythonOperator(
+    #     task_id="get_buckt_nam",
+    #     python_callable=get_bucket_name,
+    #     provide_context = True
+    # )
+    s3_bucket_name = kwargs['conf'].get(section='custom', key='bucket_name')
+    print("s3_bucket_name: ", s3_bucket_name)
     session = settings.Session()
     print("session: ", str(session))
 
@@ -47,7 +59,7 @@ def export_db_task(**kwargs):
             for y in allrows:
                 w.writerow(vars(y))
             outkey = S3_KEY.format(name[6:])
-            s3.put_object(Bucket=S3_BUCKET, Key=outkey, Body=f.getvalue())
+            s3.put_object(Bucket=s3_bucket_name, Key=outkey, Body=f.getvalue())
 
 
 @dag(
