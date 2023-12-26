@@ -7,6 +7,7 @@ from airflow.models import DagRun, TaskFail, TaskInstance
 import csv, re
 from airflow.operators.python_operator import PythonOperator
 from io import StringIO
+from airflow.models import DagModel
 
 DAG_ID = os.path.basename(__file__).replace(".py", "")
 
@@ -66,9 +67,13 @@ def export_db_task(**kwargs):
     dag_id=DAG_ID,
     schedule_interval='@hourly',
     start_date=days_ago(1),
+    is_paused_upon_creation=False
 )
 def export_db():
     t = export_db_task()
+    # dag = DagModel.get_dagmodel(DAG_ID)
+    # dag.set_is_paused(False)
+    # dag.is_paused = False
 
 
 metadb_to_s3_test = export_db()

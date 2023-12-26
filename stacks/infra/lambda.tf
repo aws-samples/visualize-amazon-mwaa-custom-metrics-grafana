@@ -73,9 +73,3 @@ resource "aws_lambda_permission" "s3_metrics_trigger" {
 #   }
 # }
 #
-#resource "aws_lambda_layer_version" "pandas_lambda_layer" {
-#  filename   = "${path.module}/src/pandas.zip"
-#  layer_name = "pandas"
-#  compatible_runtimes = ["python3.10"]
-#  source_code_hash = data.archive_file.events_lambda_code_zip.output_base64sha256
-#}

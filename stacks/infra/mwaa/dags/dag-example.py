@@ -8,7 +8,8 @@ with DAG(
     description='A simple DAG example',
     schedule_interval="*/7 * * * *",
     start_date=days_ago(20),
-    catchup=False
+    catchup=False,
+    is_paused_upon_creation=False
 ) as dag:
 
     t1 = BashOperator(

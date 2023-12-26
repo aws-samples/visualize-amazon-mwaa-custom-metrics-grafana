@@ -2,13 +2,15 @@ from airflow import DAG
 from datetime import datetime
 from airflow.utils.dates import days_ago
 from airflow.operators.bash import BashOperator
+from airflow.models import DagModel
 
 with DAG(
     dag_id='other-sample-dag',
     description='Another sample DAG example',
     schedule_interval="*/10 * * * *",
     start_date=days_ago(0),
-    catchup=False
+    catchup=False,
+    is_paused_upon_creation=False
 ) as dag:
 
     t1 = BashOperator(
