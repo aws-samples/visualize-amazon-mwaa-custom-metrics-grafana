@@ -1,3 +1,21 @@
+'''
+Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to
+deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+'''
+
 import boto3
 from urllib.parse import unquote
 import time
@@ -61,11 +79,6 @@ def get_dags_hourly_stats(event, context):
         dag_df = dag_df.drop(dag_df[dag_df["epoch_end_date"] < start_timestamp].index)
         total_dags = dag_df.shape[0] + len(total_running_dags) + len(total_paused_dags)
         print(f"total dags in last 1 hr : {total_dags}")
-
-        # count = 1
-        # for index, row in dag_df.iterrows():
-        #     print(count, row['dag_id'], row['start_date'], row['_state'], row['end_date'], row['epoch'], start_timestamp)
-        #     count += 1
 
         total_failed_dags = dag_df[dag_df['_state'] == "failed"]
         total_success_dags = dag_df[dag_df['_state'] == "success"]

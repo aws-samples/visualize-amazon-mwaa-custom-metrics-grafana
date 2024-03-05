@@ -1,3 +1,21 @@
+'''
+Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to
+deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+'''
+
 from airflow.decorators import dag, task
 from airflow import settings
 import os
@@ -5,9 +23,7 @@ import boto3
 from airflow.utils.dates import days_ago
 from airflow.models import DagRun, TaskFail, TaskInstance
 import csv, re
-from airflow.operators.python_operator import PythonOperator
 from io import StringIO
-from airflow.models import DagModel
 
 DAG_ID = os.path.basename(__file__).replace(".py", "")
 
@@ -18,23 +34,11 @@ S3_KEY = 'files/export/{0}.csv'
 # You can add other objects to export from the metadatabase,
 OBJECTS_TO_EXPORT = [
     [DagRun, DagRun.execution_date],
-    # [TaskFail,TaskFail.dag_id],
-    # [TaskInstance, TaskInstance.execution_date],
 ]
 
-# @task
-# def get_bucket_name(**kwargs):
-#   S3_BUCKET_NAME = kwargs['conf'].get(section='custom', key='bucket_name')
-#   print("S3_BUCKET_NAME : ", S3_BUCKET_NAME)
-#   return S3_BUCKET_NAME
 
 @task()
 def export_db_task(**kwargs):
-    # s3_bucuket_name = PythonOperator(
-    #     task_id="get_buckt_nam",
-    #     python_callable=get_bucket_name,
-    #     provide_context = True
-    # )
     s3_bucket_name = kwargs['conf'].get(section='custom', key='bucket_name')
     print("s3_bucket_name: ", s3_bucket_name)
     session = settings.Session()
@@ -71,9 +75,5 @@ def export_db_task(**kwargs):
 )
 def export_db():
     t = export_db_task()
-    # dag = DagModel.get_dagmodel(DAG_ID)
-    # dag.set_is_paused(False)
-    # dag.is_paused = False
-
 
 metadb_to_s3_test = export_db()
