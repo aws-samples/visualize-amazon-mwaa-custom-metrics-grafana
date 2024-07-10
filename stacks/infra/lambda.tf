@@ -18,7 +18,7 @@ THE SOFTWARE. */
 data "archive_file" "events_lambda_code_zip" {
   type        = "zip"
   source_file = "${path.module}/src/metrics_parser.py"
-  output_path = "metrics_parser-lambda.zip"
+  output_path = "metrics-parser-lambda.zip"
 }
 
 resource "aws_lambda_function" "events_lambda" {
