@@ -20,7 +20,7 @@ resource "aws_timestreamwrite_database" "events_store" {
 }
 
 resource "aws_timestreamwrite_table" "events_store" {
-  depends_on = [aws_timestreamwrite_database.events_store]
+  depends_on    = [aws_timestreamwrite_database.events_store]
   database_name = var.timestream_db_name
   table_name    = var.timestream_table_name
   magnetic_store_write_properties {

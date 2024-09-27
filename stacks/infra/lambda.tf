@@ -28,7 +28,7 @@ resource "aws_lambda_function" "events_lambda" {
   filename                       = data.archive_file.events_lambda_code_zip.output_path
   source_code_hash               = data.archive_file.events_lambda_code_zip.output_base64sha256
   handler                        = "metrics_parser.lambda_handler"
-  runtime                        = "python3.10"
+  runtime                        = local.events_lambda_function_runtime
   reserved_concurrent_executions = local.reserved_concurrent_executions
   function_name                  = local.events_lambda_function_name
   role                           = aws_iam_role.events_lambda_role.arn
@@ -39,13 +39,13 @@ resource "aws_lambda_function" "events_lambda" {
   }
   environment {
     variables = {
-      TABLE_NAME = var.timestream_table_name
-      DB_NAME  = var.timestream_db_name
-      REGION_NAME   = data.aws_region.region.name
+      TABLE_NAME          = var.timestream_table_name
+      DB_NAME             = var.timestream_db_name
+      REGION_NAME         = data.aws_region.region.name
       METRICS_BUCKET_NAME = aws_s3_bucket.mwaa_events.bucket
     }
   }
-  layers = ["arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python310:7"]
+  layers = [local.events_lambda_pandas_layer]
 
   tracing_config {
     mode = "Active"

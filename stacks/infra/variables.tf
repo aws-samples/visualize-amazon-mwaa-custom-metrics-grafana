@@ -27,6 +27,15 @@ variable "events_lambda_function_name" {
   default = "events-lambda"
 }
 
+variable "events_lambda_function_runtime" {
+  default = "python3.12"
+}
+
+variable "events_lambda_pandas_layer" {
+  default     = "arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python312:13"
+  description = "AWS SDK Layer ARN from https://aws-sdk-pandas.readthedocs.io/en/stable/layers.html"
+}
+
 variable "reserved_concurrent_executions" {
   type    = number
   default = "-1"
@@ -50,6 +59,12 @@ variable "public_subnet_cidr" {
 variable "private_subnet_cidr" {
   type    = list(string)
   default = ["10.0.3.0/24", "10.0.4.0/24"]
+}
+
+variable "s3_buckets_force_destroy" {
+  type        = bool
+  default     = true
+  description = "Indicates whether or not to force destroy the buckets - true for testing, false in production"
 }
 
 variable "mwaa_events_bucket_name" {

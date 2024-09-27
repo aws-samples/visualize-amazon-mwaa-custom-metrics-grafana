@@ -1,9 +1,9 @@
 terraform {
   required_providers {
-    aws = "~> 5.21.0"
+    aws = "~> 5.21"
     grafana = {
       source  = "grafana/grafana"
-      version = "2.6.1"
+      version = "~> 3.6"
     }
   }
   required_version = ">= 1.6.1, < 2.0.0"
