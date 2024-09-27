@@ -19,4 +19,3 @@ provider "grafana" {
   url  = join("", ["https://", aws_grafana_workspace.grafana.endpoint])
   auth = aws_grafana_workspace_api_key.grafana_admin_api_key.key
 }
-
