@@ -16,7 +16,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE. */
 
 resource "aws_s3_bucket" "mwaa_metrics" {
-  bucket = local.mwaa_metrics_bucket_name
+  bucket        = local.mwaa_metrics_bucket_name
+  force_destroy = local.s3_buckets_force_destroy
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "mwaa_metrics_lifecycle" {
@@ -42,7 +43,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "mwaa_metrics_lifecycle" {
 }
 
 resource "aws_s3_bucket_public_access_block" "mwaa_metrics_access_logs_bucket_access_block" {
-  bucket = aws_s3_bucket.mwaa_metrics.id
+  bucket                  = aws_s3_bucket.mwaa_metrics.id
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true

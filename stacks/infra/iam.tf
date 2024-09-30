@@ -61,9 +61,9 @@ resource "aws_iam_role" "mwaa_iam_role" {
 resource "aws_iam_policy" "mwaa_iam_policy" {
   name = local.mwaa_iam_policy_name
   policy = templatefile("${path.module}/templates/mwaa_policy.json", {
-    bucket_name = aws_s3_bucket.mwaa_events.id
+    bucket_name         = aws_s3_bucket.mwaa_events.id
     metrics_bucket_name = aws_s3_bucket.mwaa_metrics.id
-    account_id = data.aws_caller_identity.caller_identity.account_id
+    account_id          = data.aws_caller_identity.caller_identity.account_id
   })
 }
 

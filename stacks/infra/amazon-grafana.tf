@@ -21,7 +21,7 @@ resource "aws_grafana_workspace" "grafana" {
   account_access_type      = "CURRENT_ACCOUNT"
   authentication_providers = ["AWS_SSO"]
   permission_type          = "SERVICE_MANAGED"
-  data_sources             = ["CLOUDWATCH","TIMESTREAM"]
+  data_sources             = ["CLOUDWATCH", "TIMESTREAM"]
   description              = "Grafana workspace"
   role_arn                 = aws_iam_role.grafana_workspace_role.arn
   grafana_version          = local.grafana_version
@@ -52,7 +52,7 @@ resource "aws_security_group" "grafana_security_group" {
 }
 
 resource "aws_grafana_workspace_api_key" "grafana_admin_api_key" {
-  depends_on = [aws_grafana_workspace.grafana]
+  depends_on      = [aws_grafana_workspace.grafana]
   key_name        = "admin-apikey"
   key_role        = "ADMIN"
   seconds_to_live = 2592000 # 30 days

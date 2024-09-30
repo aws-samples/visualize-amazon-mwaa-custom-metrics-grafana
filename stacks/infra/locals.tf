@@ -55,6 +55,7 @@ locals {
     var.environment
   ])
   mwaa_events_logs_retention = var.mwaa_events_logs_retention
+  s3_buckets_force_destroy   = var.s3_buckets_force_destroy
   mwaa_metrics_bucket_name = join("-", [
     var.mwaa_metrics_bucket_name,
     data.aws_caller_identity.caller_identity.account_id,
@@ -75,6 +76,8 @@ locals {
     var.mwaa_iam_policy_name,
     var.environment
   ])
-#  timestream_db_name = var.timestream_db_name
-#  timestream_table_name = var.timestream_table_name
+  events_lambda_function_runtime = var.events_lambda_function_runtime
+  events_lambda_pandas_layer     = var.events_lambda_pandas_layer
+  #  timestream_db_name = var.timestream_db_name
+  #  timestream_table_name = var.timestream_table_name
 }

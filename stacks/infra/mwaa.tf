@@ -38,53 +38,53 @@ resource "aws_security_group" "mwaa_security_group" {
   }
 }
 
- resource "aws_mwaa_environment" "job_env" {
-   name                 = local.job_env_mwaa_name
-   dag_s3_path          = "dags/"
-   execution_role_arn   = aws_iam_role.mwaa_iam_role.arn
-   source_bucket_arn    = aws_s3_bucket.mwaa_events.arn
-   requirements_s3_path = "requirements.txt"
-   webserver_access_mode = "PUBLIC_ONLY"
-   environment_class     = local.mwaa_env_class
-   max_workers           = local.max_mwaa_workers
+resource "aws_mwaa_environment" "job_env" {
+  name                  = local.job_env_mwaa_name
+  dag_s3_path           = "dags/"
+  execution_role_arn    = aws_iam_role.mwaa_iam_role.arn
+  source_bucket_arn     = aws_s3_bucket.mwaa_events.arn
+  requirements_s3_path  = "requirements.txt"
+  webserver_access_mode = "PUBLIC_ONLY"
+  environment_class     = local.mwaa_env_class
+  max_workers           = local.max_mwaa_workers
 
-   network_configuration {
-     security_group_ids = [aws_security_group.mwaa_security_group.id]
-     subnet_ids         = [aws_subnet.private_subnet1.id, aws_subnet.private_subnet2.id]
-   }
+  network_configuration {
+    security_group_ids = [aws_security_group.mwaa_security_group.id]
+    subnet_ids         = [aws_subnet.private_subnet1.id, aws_subnet.private_subnet2.id]
+  }
 
-   airflow_configuration_options = {
-     "core.default_task_retries" = 10
-     "core.parallelism"          = 1
-     "core.lazy_load_plugins"    = false
-     "custom.bucket_name" = "${aws_s3_bucket.mwaa_metrics.bucket}"
-   }
+  airflow_configuration_options = {
+    "core.default_task_retries" = 10
+    "core.parallelism"          = 1
+    "core.lazy_load_plugins"    = false
+    "custom.bucket_name"        = "${aws_s3_bucket.mwaa_metrics.bucket}"
+  }
 
-   logging_configuration {
-     dag_processing_logs {
-       enabled   = true
-       log_level = "WARNING"
-     }
+  logging_configuration {
+    dag_processing_logs {
+      enabled   = true
+      log_level = "WARNING"
+    }
 
-     scheduler_logs {
-       enabled   = true
-       log_level = "WARNING"
-     }
+    scheduler_logs {
+      enabled   = true
+      log_level = "WARNING"
+    }
 
-     task_logs {
-       enabled   = true
-       log_level = "WARNING"
-     }
+    task_logs {
+      enabled   = true
+      log_level = "WARNING"
+    }
 
-     webserver_logs {
-       enabled   = true
-       log_level = "WARNING"
-     }
+    webserver_logs {
+      enabled   = true
+      log_level = "WARNING"
+    }
 
-     worker_logs {
-       enabled   = true
-       log_level = "WARNING"
-     }
-   }
-   depends_on = [aws_s3_object.mwaa_reqs]
- }
+    worker_logs {
+      enabled   = true
+      log_level = "WARNING"
+    }
+  }
+  depends_on = [aws_s3_object.mwaa_reqs]
+}
