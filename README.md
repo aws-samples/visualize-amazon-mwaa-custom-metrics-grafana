@@ -73,4 +73,4 @@ See the [CONTRIBUTING](https://github.com/aws-samples/visualize-amazon-mwaa-cust
 
 ## License
 
-This library is licensed under the MIT-0 License. See the [LICENSE](https://github.com/aws-samples/visualize-amazon-mwaa-custom-metrics-grafana/blob/main/LICENSE.md) file.
+This library is licensed under the MIT-0 License. See the [LICENSE](https://github.com/aws-samples/visualize-amazon-mwaa-custom-metrics-grafana/blob/main/LICENSE) file.
